@@ -6,7 +6,7 @@ import qm_tools
 # 请填写以下参数
 courseId = '521'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
-JSESSIONID = '8A9A1373F5F2035F192ED3B7B116780A'  # 写你的
+JSESSIONID = ''  # 写你的
 
 
 def init_csv():
