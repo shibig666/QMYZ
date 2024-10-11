@@ -14,7 +14,7 @@ import time
 # 请填写以下参数
 courseId = '9'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
-JSESSIONID = ''  # 写你的
+JSESSIONID = '88A86274C6110573C179A8373919D732'  # 写你的
 
 def init_csv():
     if 'data' in os.listdir():
@@ -27,12 +27,21 @@ def init_csv():
     print("创建题库")
     with open('data/data.csv', 'w', encoding='utf-8', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["courseId", "id","subType","subDescript","option0","option1","option2","option3","answer"])
+        writer.writerow(["courseId", "id","subType","optionCount","subDescript","option0","option1","option2","option3","answer"])
 
-def write_csv(courseId, id, subType, subDescript, option0, option1, option2, option3, answer):
+def write_csv(courseId, id, subType,optionCount, subDescript, option0, option1, option2, option3, answer):
+    global num
+    with open('data/data.csv', 'r', encoding='utf-8', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            if row[0] == courseId and row[1] == id:
+                return
+
     with open('data/data.csv', 'a', encoding='utf-8', newline='') as csvfile:
+        num+=1
         writer = csv.writer(csvfile)
         writer.writerow([courseId, id, subType, subDescript, option0, option1, option2, option3, answer])
+        print(f"已经添加:{num}道")
 
 
 def full2half(text):
@@ -135,17 +144,22 @@ def main():
             verify=False,
         )
         sub_queue.append(nextSub)
-        print(sub_queue[0].json()["data"])
-        datas=[sub_queue[0].json()["data"]["courseId"],
-               sub_queue[0].json()["data"]["id"],
-               sub_queue[0].json()["data"]["subType"],
-               sub_queue[0].json()["data"]["subDescript"],
-               sub_queue[0].json()["data"]["option0"],
-               sub_queue[0].json()["data"]["option1"],
-               sub_queue[0].json()["data"]["option2"],
-               sub_queue[0].json()["data"]["option3"],
-               sub_queue[1].json()['data']['subjectCorrect']]
-        csv.writer(*datas)
+        optionCount=sub_queue[0].json()["data"]['subject']['optionCount']
+
+        datas=[sub_queue[0].json()["data"]['subject']["courseId"],
+               sub_queue[0].json()["data"]['subject']["id"],
+               sub_queue[0].json()["data"]['subject']["subType"],
+               sub_queue[0].json()["data"]['subject']["optionCount"],
+               sub_queue[0].json()["data"]['subject']["subDescript"]]
+        for i in range(int(optionCount)):
+            datas.append(sub_queue[0].json()["data"]['subject'][f"option{i}"])
+        for j in range(int(optionCount),4):
+            datas.append('')
+        datas.append(sub_queue[1].json()['data']['subjectCorrect'])
+
+        for i in range(4,5+int(optionCount)):
+            datas[i]=aes_ecb_decrypt(datas[i],key_base64)
+        write_csv(*datas)
         sub_queue[0]=sub_queue[1]
         sub_queue.pop()
 
@@ -156,5 +170,7 @@ def main():
 
 
 if __name__ == "__main__":
+    num=0
     init_csv()
-    main()
+    while True:
+        main()
