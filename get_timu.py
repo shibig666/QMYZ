@@ -151,7 +151,6 @@ def main():
             print("存在不兼容题目")
         sub_queue[0] = sub_queue[1]
         sub_queue.pop()
-        # time.sleep(1)
 
 
 if __name__ == "__main__":

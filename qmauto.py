@@ -7,7 +7,7 @@ import qm_tools
 courseId = '8'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
 JSESSIONID = ''  # 写你的
-csv_file_path = "./data/data.csv"  # 需要替换为实际CSV文题库路径
+csv_file_path = "./new_qmyz/思政.csv"  # 需要替换为实际CSV文题库路径
 
 
 def loadCSV(csv_file_path):
@@ -98,7 +98,13 @@ def main():
             else:
                 num[1] += 1
                 print(f"答题失败!,答错{num[1]}道")
+            time.sleep(1)
 
 
 if __name__ == "__main__":
-    main()
+    while True:
+        try:
+            main()
+        except Exception as e:
+            print("出现异常")
+            print(e)
