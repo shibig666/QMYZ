@@ -98,7 +98,7 @@ def main():
             else:
                 num[1] += 1
                 print(f"答题失败!,答错{num[1]}道")
-            time.sleep(1)
+        time.sleep(1)
 
 
 if __name__ == "__main__":
