@@ -1,8 +1,6 @@
 import requests
 import csv
-import base64
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
+import qm_tools
 import ast
 import threading
 import re
@@ -27,23 +25,7 @@ def full2half(text):
     text = text.replace('）', ')')
     text = text.replace('，', ',')
     text = text.replace('。', '.')
-
     return text
-
-
-def fix_base64_padding(b64_string):
-    return b64_string + '=' * (-len(b64_string) % 4)
-
-
-# AES ECB 解密函数
-def aes_ecb_decrypt(ciphertext_base64, key_base64):
-    ciphertext_base64 = fix_base64_padding(ciphertext_base64)
-    key_base64 = fix_base64_padding(key_base64)
-    ciphertext = base64.b64decode(ciphertext_base64)
-    key = base64.b64decode(key_base64)
-    cipher = AES.new(key, AES.MODE_ECB)
-    decrypted_data = unpad(cipher.decrypt(ciphertext), AES.block_size)
-    return decrypted_data.decode('utf-8')
 
 
 def load_question_bank(csv_file_path):
@@ -103,7 +85,8 @@ def main():
             verify=False,
         )
         if ti.status_code == 200 and ti.json()['isSuccess'] == True:
-            sub_descript = full2half(aes_ecb_decrypt(ti.json()['data']['nextSubject']['subDescript'], key_base64))
+            sub_descript = full2half(
+                qm_tools.aes_ecb_decrypt(ti.json()['data']['nextSubject']['subDescript'], key_base64))
             type = ti.json()['data']['nextSubject']['subType']
             uuid = ti.json()['data']['uuid']
             if type not in ["单选题", "判断题"]:
@@ -115,7 +98,8 @@ def main():
             for i in range(count):
                 try:
                     xuan_xiang.append(
-                        full2half(aes_ecb_decrypt(ti.json()['data']['nextSubject']['option' + str(i)], key_base64)))
+                        full2half(
+                            qm_tools.aes_ecb_decrypt(ti.json()['data']['nextSubject']['option' + str(i)], key_base64)))
                 except Exception as e:
                     print(e)
 

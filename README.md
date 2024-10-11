@@ -2,32 +2,31 @@
 
 # 🚀🚀🚀青马易战自动刷题程序
 
-可以实现高速的自动刷题，自动AI对战
+可以实现高速的自动刷题，自动AI对战，自动爬取题库
 
 
 ### 上手指南
 
 
-###### 开发前的配置要求
+##### 开发前的配置要求
 
 1. python
 2. requests
 3. Crypto
 
-###### **安装步骤**
+##### 程序说明 
 
-1. 安装python
-2. 安装requests库
-3. 安装Crypto库
+**old**开头的是旧版刷题程序，适配stack-all题库。
 
-```sh
-pip install requests
-pip install Crypto
-```
-###### **运行步骤**
-1. 首先在main.py或fight.py填写部分参数
-2. 运行main进行刷题
-3. 运行fight进行ai自动对战
+qmauto是自动刷题程序。
+
+get_timu是自动爬取题库程序。
+
+old_fight是ai对战程序。
+
+通过get_timu爬取题目转换为CSV，使用qmauto读取CSV实现自动刷题。
+
+
 
 
 ### 作者

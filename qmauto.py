@@ -1,13 +1,7 @@
 import requests
 import csv
-import base64
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
-import ast
-import threading
-import re
-import api
 import time
+import qm_tools
 
 # 请填写以下参数
 courseId = '521'  # 课程id
@@ -16,27 +10,10 @@ JSESSIONID = ''  # 写你的
 csv_file_path = "./qmyz/新生入学.csv"  # 需要替换为实际CSV文题库路径
 
 
-
-def fix_base64_padding(b64_string):
-    return b64_string + '=' * (-len(b64_string) % 4)
-
-
-# AES ECB 解密函数
-def aes_ecb_decrypt(ciphertext_base64, key_base64):
-    ciphertext_base64 = fix_base64_padding(ciphertext_base64)
-    key_base64 = fix_base64_padding(key_base64)
-    ciphertext = base64.b64decode(ciphertext_base64)
-    key = base64.b64decode(key_base64)
-    cipher = AES.new(key, AES.MODE_ECB)
-    decrypted_data = unpad(cipher.decrypt(ciphertext), AES.block_size)
-    return decrypted_data.decode('utf-8')
-
-
 def loadCSV(csv_file_path):
     with open(csv_file_path, mode='r', encoding='utf-8') as f:
         reader = csv.reader(f)
         return list(reader)[1:]
-
 
 
 # 请求相关参数
@@ -68,11 +45,11 @@ data = {
 AB = {0: "A", 1: "B", 2: "C", 3: "D"}
 num = [0, 0]
 
-tiku=loadCSV(csv_file_path)
+tiku = loadCSV(csv_file_path)
+
 
 def main():
     global num
-
     while True:
         ti = requests.post(
             'http://112.5.88.114:31101/yiban-web/stu/nextSubject.jhtml',
@@ -83,20 +60,20 @@ def main():
             verify=False,
         )
         if ti.status_code == 200 and ti.json()['isSuccess'] == True:
-            sub_descript = aes_ecb_decrypt(ti.json()['data']['nextSubject']['subDescript'], key_base64)
+            sub_descript = qm_tools.aes_ecb_decrypt(ti.json()['data']['nextSubject']['subDescript'], key_base64)
             type = ti.json()['data']['nextSubject']['subType']
             uuid = ti.json()['data']['uuid']
-            if type not in ["单选题", "判断题","多选题"]:
+            if type not in ["单选题", "判断题", "多选题"]:
                 print(f"暂不支持该类型:{type}")
                 continue
-            flag=False
+            flag = False
             for t in tiku:
-                if sub_descript ==t[4]:
+                if sub_descript == t[4]:
                     print("查到了")
-                    right_ans=t[-1]
-                    flag=True
+                    right_ans = t[-1]
+                    flag = True
                     break
-            if flag==False:
+            if flag == False:
                 print("没查到")
                 print(sub_descript)
                 continue
@@ -106,7 +83,6 @@ def main():
                 'uuid': uuid,
                 'deviceUuid': '',
             }
-
             ans_res = requests.post(
                 'http://112.5.88.114:31101/yiban-web/stu/changeSituation.jhtml',
                 params=params,
@@ -125,5 +101,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()
