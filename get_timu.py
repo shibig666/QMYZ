@@ -40,7 +40,7 @@ def write_csv(courseId, id, subType,optionCount, subDescript, option0, option1, 
     with open('data/data.csv', 'a', encoding='utf-8', newline='') as csvfile:
         num+=1
         writer = csv.writer(csvfile)
-        writer.writerow([courseId, id, subType, subDescript, option0, option1, option2, option3, answer])
+        writer.writerow([courseId, id, subType,optionCount, subDescript, option0, option1, option2, option3, answer])
         print(f"已经添加:{num}道")
 
 
