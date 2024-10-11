@@ -24,6 +24,12 @@ get_timu是自动爬取题库程序。
 
 old_fight是ai对战程序。
 
+qmyz存放旧版题库，使用old程序运行
+
+new_qmyz存放新版题库
+
+默认题库不一定最新，用户可以在此基础上爬取新题目
+
 JSESSIONID通过cookie获取
 
 通过get_timu爬取题目转换为CSV，使用qmauto读取CSV实现自动刷题。
