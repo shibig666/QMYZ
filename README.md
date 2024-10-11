@@ -19,7 +19,6 @@
 1. 安装python
 2. 安装requests库
 3. 安装Crypto库
-4. 在python
 
 ```sh
 pip install requests
