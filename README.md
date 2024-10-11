@@ -37,6 +37,7 @@ shibig
 
 ### 版权说明
 
+请勿商用
 该项目签署了MIT 授权许可，详情请参阅 LICENSE.txt
 
 
