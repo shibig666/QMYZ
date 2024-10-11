@@ -12,7 +12,7 @@ import api
 import time
 
 # 请填写以下参数
-courseId = '9'  # 课程id
+courseId = '521'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
 JSESSIONID = ''  # 写你的
 
@@ -34,7 +34,8 @@ def write_csv(courseId, id, subType,optionCount, subDescript, option0, option1, 
     with open('data/data.csv', 'r', encoding='utf-8', newline='') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            if row[0] == courseId and row[1] == id:
+            if row[0] == str(courseId) and row[1] == str(id):
+                print("重复题库")
                 return
 
     with open('data/data.csv', 'a', encoding='utf-8', newline='') as csvfile:
@@ -92,11 +93,6 @@ headers = {
 params = {
     '_': str(time.time_ns())[:13],
 }
-
-
-
-AB = {0: "A", 1: "B", 2: "C", 3: "D"}
-num = [0, 0]
 
 def main():
     global num
@@ -159,7 +155,10 @@ def main():
 
         for i in range(4,5+int(optionCount)):
             datas[i]=aes_ecb_decrypt(datas[i],key_base64)
-        write_csv(*datas)
+        try:
+            write_csv(*datas)
+        except:
+            print("存在不兼容题目")
         sub_queue[0]=sub_queue[1]
         sub_queue.pop()
 
