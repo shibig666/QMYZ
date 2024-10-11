@@ -60,6 +60,7 @@ def main():
             verify=False,
         )
         if ti.status_code == 200 and ti.json()['isSuccess'] == True:
+            time.sleep(1)
             sub_descript = qm_tools.aes_ecb_decrypt(ti.json()['data']['nextSubject']['subDescript'], key_base64)
             type = ti.json()['data']['nextSubject']['subType']
             uuid = ti.json()['data']['uuid']
@@ -98,7 +99,7 @@ def main():
             else:
                 num[1] += 1
                 print(f"答题失败!,答错{num[1]}道")
-        time.sleep(1)
+
 
 
 if __name__ == "__main__":
