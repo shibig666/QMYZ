@@ -6,10 +6,10 @@ import time
 import json
 import qm_tools
 # 请填写以下参数
-courseId = '8'  # 课程id
+courseId = '9'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
 JSESSIONID = ''  # 写你的
-csv_file_path = "./data/test.csv"  # 需要替换为实际CSV文题库路径
+csv_file_path = "./data/马克思.csv"  # 需要替换为实际CSV文题库路径
 
 timu=[]
 def loadCSV(csv_file_path):
