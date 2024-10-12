@@ -34,6 +34,8 @@ JSESSIONID通过cookie获取
 
 通过get_timu爬取题目转换为CSV，使用qmauto读取CSV实现自动刷题。
 
+fight是AI对战功能，可以自动添加题库找不到的题目。理论上可以使用fight来爬取题目。
+
 
 
 
