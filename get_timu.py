@@ -7,7 +7,7 @@ import sys
 # 请填写以下参数
 courseId = '8'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
-JSESSIONID = ' '  # 写你的
+JSESSIONID = ''  # 写你的
 
 
 def init_csv():

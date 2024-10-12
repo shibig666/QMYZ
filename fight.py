@@ -10,10 +10,18 @@ import sys
 courseId = '8'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
 JSESSIONID = ''  # 写你的
-csv_file_path = "./data/data.csv"  # 需要替换为实际CSV文题库路径
+csv_file_path = "./data/test.csv"  # 需要替换为实际CSV文题库路径
 
 timu=[]
 def loadCSV(csv_file_path):
+    if not os.path.exists(csv_file_path):
+        print("新建题库")
+        with open(csv_file_path, 'w', encoding='utf-8', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(
+                ["courseId", "id", "subType", "optionCount", "subDescript", "option0", "option1", "option2",
+                 "option3",
+                 "answer"])
     with open(csv_file_path, mode='r', encoding='utf-8') as f:
         reader = csv.reader(f)
         return list(reader)[1:]
@@ -152,7 +160,7 @@ def main():
             ansFlag=True
             lastSub=nextSub.json()['data']['subject']
 
-        time.sleep(1)
+        # time.sleep(0.1)
 
     requests.post(
         'http://112.5.88.114:31101/yiban-web/stu/answerByManMachine.jhtml',
