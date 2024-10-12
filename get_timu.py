@@ -7,7 +7,7 @@ import sys
 # 请填写以下参数
 courseId = '8'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
-JSESSIONID = ''  # 写你的
+JSESSIONID = ' '  # 写你的
 
 
 def init_csv():
@@ -86,6 +86,8 @@ def main():
         print("退出程序")
         sys.exit()
     sub_queue = []
+
+    # 获取room id
     get_start = requests.post(
         'http://112.5.88.114:31101/yiban-web/stu/startAnswerByManMachine.jhtml',
         params=params,
@@ -94,7 +96,6 @@ def main():
         data={'courseId': courseId},
         verify=False,
     )
-    # print(get_start.text)
     try:
         status = get_start.json()['isSuccess']
     except Exception as e:
@@ -102,6 +103,8 @@ def main():
         print(get_start.text)
         return
     roomId = get_start.json()['data']['roomId']
+
+
     getSingle = requests.post(
         'http://112.5.88.114:31101/yiban-web/stu/getSinglePersonSituation.jhtml',
         params=params,
