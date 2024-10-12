@@ -7,7 +7,7 @@ import qm_tools
 courseId = '12'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
 JSESSIONID = ''  # 写你的
-csv_file_path = "./new_qmyz/习近平.csv"  # 需要替换为实际CSV文题库路径
+csv_file_path = "qmyz/习近平.csv"  # 需要替换为实际CSV文题库路径
 
 
 def loadCSV(csv_file_path):
