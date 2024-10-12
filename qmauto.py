@@ -4,10 +4,10 @@ import time
 import qm_tools
 
 # 请填写以下参数
-courseId = '8'  # 课程id
+courseId = '12'  # 课程id
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
 JSESSIONID = ''  # 写你的
-csv_file_path = "./new_qmyz/思政.csv"  # 需要替换为实际CSV文题库路径
+csv_file_path = "./new_qmyz/习近平.csv"  # 需要替换为实际CSV文题库路径
 
 
 def loadCSV(csv_file_path):
@@ -60,7 +60,6 @@ def main():
             verify=False,
         )
         if ti.status_code == 200 and ti.json()['isSuccess'] == True:
-            time.sleep(1)
             sub_descript = qm_tools.aes_ecb_decrypt(ti.json()['data']['nextSubject']['subDescript'], key_base64)
             type = ti.json()['data']['nextSubject']['subType']
             uuid = ti.json()['data']['uuid']
