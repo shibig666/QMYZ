@@ -11,12 +11,13 @@ import random
 #################################### 请填写以下参数
 courseId = '9'  # 课程id
 csv_file_path = "./qmyz/马克思.csv"  # 需要替换为实际CSV文题库路径
-url=''
-JSESSIONID = ''  # url和JSESSIONID二选一
+url=''  # 需要替换为实际URL
+
 #############################################
 
 key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'  # SB题库搞NM的加密，如果密钥不变不需要修改
 timu=[]
+JSESSIONID = ""
 
 def get_cookie_from_url(url):
     global JESSIONID

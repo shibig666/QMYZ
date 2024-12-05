@@ -5,18 +5,17 @@ import qm_tools
 import random
 import re
 
-# 请手动填写参数: courseId, url或JSESSIONID#######################
+# 请手动填写参数: courseId, url,csv_file_path#######################
 courseId = '9'  # 课程id
 # 常见courseId如下：
 # 形势与政策 15 毛泽东思想和中国特色社会主义理论体系概论 7
 # 思想道德与法治 8 马克思主义基本原理 9
 # 中国近现代史纲要 10 习近平新时代中国特色社会主义思想概论 12
-JSESSIONID = ''
-url=''
-# JSESSIONID和url选择一个填写即可！！！
+url=''  # 需要替换为实际URL
 csv_file_path = "qmyz/马克思.csv"  # 需要替换为实际CSV文题库路径
 # 请手动填写以上参数##############################################
 
+JSESSIONID = ""
 # 方法载入
 def loadCSV(csv_file_path):
     with open(csv_file_path, mode='r', encoding='utf-8') as f:
