@@ -30,7 +30,7 @@ def get_cookie_from_url(url):
 
 def loadCSV(csv_file_path):
     if not os.path.exists(csv_file_path):
-        print("New question bank")
+        print("创建新题库")
         with open(csv_file_path, 'w', encoding='utf-8', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(
@@ -93,8 +93,6 @@ def main():
         return
     roomId = get_start.json()['data']['roomId']
 
-
-
     ansFlag=False
     lastSub=None
     start = requests.get(
@@ -110,16 +108,15 @@ def main():
     for l in tiku:
         if str(start_sub['subjectId']) == l[1] and str(
                 start_sub["courseId"]) == l[0]:
-            print("Start to find ok")
+            print("找到题目")
             ans = l[-1]
             flag = True
             ansFlag=False
             break
     if flag == False:
-        print("Start to find NOT ok")
+        print("没找到题目")
         ansFlag=True
         lastSub=start_sub
-
 
     for i in range(5):
         nextSub = requests.post(
@@ -158,20 +155,20 @@ def main():
             try:
                 write_csv(*datas)
             except:
-                print("Incompatible problems exist")
+                print("存在问题")
 
         ans = "A"
         flag=False
         for l in tiku:
             if str(nextSub.json()['data']['subject']["id"])==l[1] and str(nextSub.json()['data']['subject']["courseId"])==l[0]:
-                print("Got it.！！！")
+                print("答对了")
                 ans=l[-1]
                 flag=True
                 ansFlag=False
                 break
 
         if flag==False:
-            print("Target not found.！！")
+            print("没找到")
             ansFlag=True
             lastSub=nextSub.json()['data']['subject']
 
@@ -185,7 +182,6 @@ def main():
         data={'answer': ans, 'roomId': roomId, },
         verify=False,
     )
-
 
     final = requests.post(
         'http://112.5.88.114:31101/yiban-web/stu/findFightResultByRoomId.jhtml',
@@ -204,7 +200,6 @@ def main():
             break
 
 
-
 if __name__ == "__main__":
     num=0
     tiku = loadCSV(csv_file_path)
@@ -212,6 +207,6 @@ if __name__ == "__main__":
         try:
             main()
         except Exception as e:
-            print("err")
+            print("出错了,重新获取cookie")
             print(e)
             JSESSIONID = ""
