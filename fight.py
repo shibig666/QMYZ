@@ -4,7 +4,7 @@ import re
 import csv
 import time
 import json
-import qm_tools
+import qm_utils.qm_tools as qm_tools
 import random
 
 
