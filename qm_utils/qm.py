@@ -20,10 +20,10 @@ class qm_tiku:
 
 class qm_auto:
 
-    def __init__(self, url, tiku, courseId):
+    def __init__(self, url, tiku, courseId, JSESSIONID=""):
         self.url=url
         self.tiku=tiku
-        self.JSESSIONID = self.get_cookie_from_url()
+        self.JSESSIONID = JSESSIONID
         self.key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'
         self.courseId = courseId
         self.headers = {
