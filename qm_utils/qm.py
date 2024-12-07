@@ -12,19 +12,18 @@ class qm_tiku:
         self.num = [0, 0]
 
     def loadCSV(self, csv_file_path):
-        with open(csv_file_path, 'r', encoding='utf-8') as f:
+        with open(csv_file_path, "r", encoding="utf-8") as f:
             reader = csv.reader(f)
             tiku = list(reader)
         return tiku
 
 
 class qm_auto:
-
     def __init__(self, url, tiku, courseId, JSESSIONID=""):
-        self.url=url
-        self.tiku=tiku
+        self.url = url
+        self.tiku = tiku
         self.JSESSIONID = JSESSIONID
-        self.key_base64 = 'ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg'
+        self.key_base64 = "ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg"
         self.courseId = courseId
         self.headers = {
             "Accept": "application/json",
@@ -40,7 +39,9 @@ class qm_auto:
             "X-Requested-With": "XMLHttpRequest",
         }
         self.cookies = {
-            "JSESSIONID": self.JSESSIONID if self.JSESSIONID != "" else self.get_cookie_from_url(),
+            "JSESSIONID": (
+                self.JSESSIONID if self.JSESSIONID != "" else self.get_cookie_from_url()
+            ),
         }
         self.params = {
             "_": str(time.time_ns())[:13],
@@ -61,10 +62,10 @@ class qm_auto:
 
     def get_cookie_from_url(self):
         res = requests.get(self.url)
-        cookie = re.match(r'JSESSIONID=\w*', res.headers['set-cookie']).group()
-        cookie=cookie[len("JSESSIONID="):]
-        print('获取到cookie: ' + cookie)
-        self.JSESSIONID=cookie
+        cookie = re.match(r"JSESSIONID=\w*", res.headers["set-cookie"]).group()
+        cookie = cookie[len("JSESSIONID=") :]
+        print("获取到cookie: " + cookie)
+        self.JSESSIONID = cookie
         return cookie
 
     def do(self):
@@ -78,9 +79,11 @@ class qm_auto:
         )
         if not self.judge_request(ti):
             return False
-        sub_descript = qm_tools.aes_ecb_decrypt(ti.json()['data']['nextSubject']['subDescript'], self.key_base64)
-        type = ti.json()['data']['nextSubject']['subType']
-        uuid = ti.json()['data']['uuid']
+        sub_descript = qm_tools.aes_ecb_decrypt(
+            ti.json()["data"]["nextSubject"]["subDescript"], self.key_base64
+        )
+        type = ti.json()["data"]["nextSubject"]["subType"]
+        uuid = ti.json()["data"]["uuid"]
         if type not in ["单选题", "判断题", "多选题"]:
             print(f"暂不支持该类型: {type}")
             return False
@@ -113,17 +116,21 @@ class qm_auto:
         )
         if not self.judge_request(ans_res):
             return False
-        if ans_res.status_code == 200 and ans_res.json()['isSuccess'] == True and ans_res.json()['message'] == "回答正确！":
+        if (
+            ans_res.status_code == 200
+            and ans_res.json()["isSuccess"] == True
+            and ans_res.json()["message"] == "回答正确！"
+        ):
             self.num[0] += 1
             print(f"答题正确, 当前答对{self.num[0]}道")
         else:
             self.num[1] += 1
             print(f"答题错误, 当前答错{self.num[1]}道")
         return True
-    
-    def auto_do(self,num):
-        assert type(num)==int
-        if num<=0:
+
+    def auto_do(self, num):
+        assert type(num) == int
+        if num <= 0:
             while True:
                 time.sleep(random.randint(3, 6))
                 self.do()
