@@ -19,12 +19,13 @@ class qm_tiku:
 
 
 class qm_auto:
-    def __init__(self, url, tiku, courseId, JSESSIONID=""):
+    def __init__(self, url, tiku, courseId, JSESSIONID="", accuracy=100):
         self.url = url
         self.tiku = tiku
         self.JSESSIONID = JSESSIONID
         self.key_base64 = "ZDBmMTNiZGI3MDRhMWVhMWE3MTcwNjJiNTk0NzY0ODg"
         self.courseId = courseId
+        self.accuracy = accuracy
         self.headers = {
             "Accept": "application/json",
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
@@ -52,6 +53,12 @@ class qm_auto:
 
         self.AB = {0: "A", 1: "B", 2: "C", 3: "D"}
         self.num = [0, 0]
+
+    def calculate_accuracy(self):
+        if self.num[0] + self.num[1] == 0:
+            return 0
+        else:
+            return self.num[0] / (self.num[0] + self.num[1]) * 100
 
     def judge_request(self, res):
         if res.status_code != 200:
@@ -94,12 +101,28 @@ class qm_auto:
         for t in self.tiku:
             if sub_descript == t[4]:
                 print(f"查询到题目: {sub_descript}")
-                right_ans = t[-1]
                 flag = True
+                if self.calculate_accuracy() > self.accuracy:
+                    print(f"超过准确度要求{self.accuracy}%")
+                    right_ans = (
+                        self.AB[random.randint(0, 1)]
+                        if type == "判断题"
+                        else self.AB[random.randint(0, 3)]
+                    )
+                else:
+                    right_ans = t[-1]
                 break
         if not flag:
             print(f"未查询到题目: {sub_descript}")
-            return False
+            if self.calculate_accuracy() > self.accuracy:
+                print(f"超过准确度要求{self.accuracy}%")
+                right_ans = (
+                    self.AB[random.randint(0, 1)]
+                    if type == "判断题"
+                    else self.AB[random.randint(0, 3)]
+                )
+            else:
+                return False
         ans_data = {
             "answer": right_ans,
             "courseId": self.courseId,
@@ -122,10 +145,15 @@ class qm_auto:
             and ans_res.json()["message"] == "回答正确！"
         ):
             self.num[0] += 1
-            print(f"答题正确, 当前答对{self.num[0]}道")
+            print(
+                f"答题正确, 当前答对{self.num[0]}道，准确率为{self.calculate_accuracy()}",
+            )
+
         else:
             self.num[1] += 1
-            print(f"答题错误, 当前答错{self.num[1]}道")
+            print(
+                f"答题错误, 当前答错{self.num[1]}道，准确率为{self.calculate_accuracy()}"
+            )
         return True
 
     def auto_do(self, num):
