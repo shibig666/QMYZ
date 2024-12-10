@@ -5,6 +5,7 @@ import qm_utils.qm_tools as qm_tools
 import random
 import re
 
+init_num = -666
 
 class qm_tiku:
     def __init__(self, csv_file_path):
@@ -51,7 +52,7 @@ class qm_auto:
         }
 
         self.AB = {0: "A", 1: "B", 2: "C", 3: "D"}
-        self.num = [0, 0]
+        self.num = [0, 0, 0]
 
     def judge_request(self, res):
         if res.status_code != 200:
@@ -95,11 +96,19 @@ class qm_auto:
             if sub_descript == t[4]:
                 print(f"查询到题目: {sub_descript}")
                 right_ans = t[-1]
+                print(f"这里的题库返回是 {right_ans}")
                 flag = True
                 break
         if not flag:
             print(f"未查询到题目: {sub_descript}")
-            return False
+            RANDD = random.randint(1,100)#避免正确率是100%
+            per = 30 #per%的搜不到的题目选择不作答,100则正确率为100%
+            if RANDD <= per:
+                print(f"选择不作答")
+                return False
+            right_ans = random.choice(['A', 'B', 'C', 'D'])#目前只适配单选题
+            print(f"这里猜一个选项 {right_ans}")
+            flag = True
         ans_data = {
             "answer": right_ans,
             "courseId": self.courseId,
@@ -122,14 +131,17 @@ class qm_auto:
             and ans_res.json()["message"] == "回答正确！"
         ):
             self.num[0] += 1
-            print(f"答题正确, 当前答对{self.num[0]}道")
+            self.num[2] = self.num[0] + self.num[1]
+            print(f"答题正确, 当前答对{self.num[0]}道, 答错{self.num[1]}道, 未作答{init_num-self.num[2]}道")
         else:
             self.num[1] += 1
             print(f"答题错误, 当前答错{self.num[1]}道")
         return True
-
     def auto_do(self, num):
         assert type(num) == int
+        global init_num
+        if init_num == -666:
+           init_num = num
         if num <= 0:
             while True:
                 time.sleep(random.randint(3, 6))
