@@ -53,7 +53,7 @@ python qm_cli.py -u "http://your-login-url" -i 12 -c "qmyz/12.csv" -n 100 -a 90
 python fight.py
 
 # 使用 `qmauto` 进行交互式答题
-python qmauto.py
+python qm_auto.py
 ```
 
 ## 👨‍💻 作者
