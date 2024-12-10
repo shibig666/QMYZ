@@ -23,5 +23,5 @@ csv = args.csv
 course = args.course
 num = args.num
 ti = qm_utils.qm.qm_tiku(csv)
-qm = qm_utils.qm.qm_auto(url, ti.tiku, course, acc=args.accuracy, num=num)
+qm = qm_utils.qm.qm_auto(url, ti.tiku, course, accuracy=args.accuracy)
 qm.auto_do(num)
