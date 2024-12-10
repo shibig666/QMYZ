@@ -5,7 +5,11 @@ import qm_utils.qm_tools as qm_tools
 import random
 import re
 
-init_num = -666
+蒙题比例 = 30 #0为不蒙
+
+init_num = -666 #最开始输入的需要刷的题数
+cnt = 0 #总作答题数
+sum = 0
 
 class qm_tiku:
     def __init__(self, csv_file_path):
@@ -52,7 +56,7 @@ class qm_auto:
         }
 
         self.AB = {0: "A", 1: "B", 2: "C", 3: "D"}
-        self.num = [0, 0, 0]
+        self.num = [0, 0]
 
     def judge_request(self, res):
         if res.status_code != 200:
@@ -70,6 +74,7 @@ class qm_auto:
         return cookie
 
     def do(self):
+        global cnt , sum , 蒙题比例
         ti = requests.post(
             "http://112.5.88.114:31101/yiban-web/stu/nextSubject.jhtml",
             params=self.params,
@@ -101,12 +106,20 @@ class qm_auto:
                 break
         if not flag:
             print(f"未查询到题目: {sub_descript}")
-            RANDD = random.randint(1,100)#避免正确率是100%
-            per = 30 #per%的搜不到的题目选择不作答,100则正确率为100%
+            
+            RANDD = random.randint(1,100)
+            per = 100 - 蒙题比例 
+            if type in ["单选题"]:
+                right_ans = random.choice(['A', 'B', 'C', 'D'])#目前只适配单选题和选择题
+            elif type in ["判断题"]:
+                right_ans = random.choice(['A', 'B'])#目前只适配单选题和选择题
+            else:
+                per = 100 #其他类型的题只能跳过
             if RANDD <= per:
+                cnt += 1
                 print(f"选择不作答")
+                print(f"已作答{sum}道, 未作答{cnt}道, 还需作答{init_num-sum-cnt}题")
                 return False
-            right_ans = random.choice(['A', 'B', 'C', 'D'])#目前只适配单选题
             print(f"这里猜一个选项 {right_ans}")
             flag = True
         ans_data = {
@@ -131,17 +144,18 @@ class qm_auto:
             and ans_res.json()["message"] == "回答正确！"
         ):
             self.num[0] += 1
-            self.num[2] = self.num[0] + self.num[1]
-            print(f"答题正确, 当前答对{self.num[0]}道, 答错{self.num[1]}道, 未作答{init_num-self.num[2]}道")
+            print(f"答题正确, 当前答对{self.num[0]}道, 当前答错{self.num[1]}道, ",end="")
         else:
             self.num[1] += 1
-            print(f"答题错误, 当前答错{self.num[1]}道")
+            print(f"答题错误, 当前答对{self.num[0]}道, 当前答错{self.num[1]}道, ",end="")
+        sum = self.num[0] + self.num[1]
+        print(f"已跳过{cnt}道, 还需作答{init_num-sum-cnt}题")
         return True
     def auto_do(self, num):
         assert type(num) == int
         global init_num
         if init_num == -666:
-           init_num = num
+           init_num = num 
         if num <= 0:
             while True:
                 time.sleep(random.randint(3, 6))
