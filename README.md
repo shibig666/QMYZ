@@ -27,6 +27,7 @@ pip install -r ./requirements.txt
   - `-i` 课程ID
   - `-c` 题库路径
   - `-n` 答题量，默认为无限
+  - `-a` 准确度，默认为100
 
 - **`fight`**：自动AI对战答题程序，支持自动补充题库（推荐使用此程序来爬取题目）。
   
@@ -46,7 +47,7 @@ pip install -r ./requirements.txt
 
 ```bash
 # 使用 `qm_cli` 自动刷题
-python qm_cli.py -u "http://your-login-url" -i 12 -c "qmyz/12.csv" -n 100
+python qm_cli.py -u "http://your-login-url" -i 12 -c "qmyz/12.csv" -n 100 -a 90
 
 # 使用 `fight` 进行自动AI对战并爬取新题目(需要在文件中填写参数)
 python fight.py
