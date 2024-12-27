@@ -5,14 +5,14 @@ from Crypto.Util.Padding import unpad
 import requests
 
 
-def full2half(text):
-    text = re.sub("\s", "", text)
-    text = re.sub("[A-Z]\.", "", text)
-    text = text.replace("（", "(")
-    text = text.replace("）", ")")
-    text = text.replace("，", ",")
-    text = text.replace("。", ".")
-    return text
+# def full2half(text):
+#     text = re.sub("\s", "", text)
+#     text = re.sub("[A-Z]\.", "", text)
+#     text = text.replace("（", "(")
+#     text = text.replace("）", ")")
+#     text = text.replace("，", ",")
+#     text = text.replace("。", ".")
+#     return text
 
 
 def fix_base64_padding(b64_string):
