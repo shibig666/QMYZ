@@ -1,8 +1,8 @@
-import re
 import base64
+import re
+import requests
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
-import requests
 
 
 # def full2half(text):
@@ -33,7 +33,10 @@ def aes_ecb_decrypt(ciphertext_base64, key_base64):
 def get_cookie_from_url(url):
     res = requests.get(url)
     cookie = re.match(r"JSESSIONID=\w*", res.headers["set-cookie"]).group()
-    cookie = cookie[len("JSESSIONID=") :]
+    cookie = cookie[len("JSESSIONID="):]
+    re_res = requests.get(url, headers={"Cookie": "JSESSIONID=" + cookie})
+    if re_res.status_code != 200:
+        raise Exception("获取cookie失败")
     return cookie
 
 
